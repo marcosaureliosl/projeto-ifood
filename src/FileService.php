@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 class FileService
 {
-    public static function save(string $filename): string
+    public static function save(string $filename): FileImport
     {
         $partes = explode('_', strtolower($filename));
 
@@ -35,6 +35,6 @@ class FileService
             to: "{$caminho}/{$arquivoFinal}.csv"
         );
         
-        return $tipo;
+        return new FileImport($empresa, $tipo);
     }
 }
