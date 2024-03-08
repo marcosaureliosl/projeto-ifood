@@ -1,41 +1,39 @@
 <?php
 
+include 'src/FileService.php';
+
 echo '========================'.PHP_EOL;
 echo '--- INICIANDO IMPORT ---'.PHP_EOL;
 
 $nomeDoArquivo = $argv[1];
-// input/Zenir_20240704_entrada.csv
 
-$partes = explode('_', $nomeDoArquivo);
-
-//isolar apenas o nome da empresa
-$empresa = explode('/', $partes[0])[1];
-
-$data = $partes[1];
-
-//isolar apenas o tipo de processo (entrada ou saida)
-$tipo = explode('.', $partes[2])[0];
-
-$empresa = strtolower($empresa);
-
-// 20240307
-$ano = substr($data, 0, 4);
-$mes = substr($data, 4, 2);
-$dia = substr($data, -2);
-
-//criando a pasta da empresa
-mkdir(
-    directory: "data/{$empresa}/{$tipo}/{$ano}/{$mes}/{$dia}", 
-    recursive: true
-);
+// $tipo = FileService::save($nomeDoArquivo);
 
 
+// echo "- Tipo: {$tipo}".PHP_EOL;
+
+// if ($tipo === 'saida') {
+//     echo '========================'.PHP_EOL;
+//     exit;
+// }
+
+$linhas = file($nomeDoArquivo);
+
+$arquivoColab = fopen("colaboradores.csv", "a+"); //usa pra escrever no arquivo
+
+$separador = ',';
+
+if (true === str_contains($linhas[0], ';')) {
+    $separador = ';';
+} 
+
+foreach ($linhas as $cadaLinha) {
+    $partes = explode($separador, $cadaLinha);
+
+    fwrite($arquivoColab, "{$partes[0]};{$partes[1]}".PHP_EOL);
+}
 
 
-//lendo conteudo do arquivo e transformando em um array do PHP
-// $linhasDoArquivo = file($nomeDoArquivo);
 
-// print_r($linhasDoArquivo);
 
-echo '========================'.PHP_EOL;
 
