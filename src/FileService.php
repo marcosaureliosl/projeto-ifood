@@ -9,7 +9,8 @@ class FileService
         $partes = explode('_', strtolower($filename));
 
         //isolar apenas o nome da empresa
-        $empresa = explode('/', $partes[0])[1];
+        $empresaPartes = explode('/', $partes[0]);
+        $empresa = array_pop($empresaPartes);
                 
         //isolar apenas o tipo de processo (entrada ou saida)
         $tipo = explode('.', $partes[2])[0];
@@ -25,7 +26,7 @@ class FileService
         mkdir(
             directory: $caminho, 
             recursive: true
-        );
+        );   
         
         $arquivoFinal = date('Y-m-d_His');
         
