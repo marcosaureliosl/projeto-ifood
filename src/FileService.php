@@ -23,10 +23,12 @@ class FileService
         $caminho = "data/{$empresa}/{$tipo}/{$ano}/{$mes}/{$dia}";
         
         //criando a pasta da empresa
-        mkdir(
-            directory: $caminho, 
-            recursive: true
-        );   
+        if (!is_dir($caminho)) {
+            mkdir(
+                directory: $caminho, 
+                recursive: true
+            );   
+        } 
         
         $arquivoFinal = date('Y-m-d_His');
         
