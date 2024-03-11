@@ -9,7 +9,8 @@ class FileService
         $partes = explode('_', strtolower($filename));
 
         //isolar apenas o nome da empresa
-        $empresa = explode('/', $partes[0])[1];
+        $empresaPartes = explode('/', $partes[0]);
+        $empresa = array_pop($empresaPartes);
                 
         //isolar apenas o tipo de processo (entrada ou saida)
         $tipo = explode('.', $partes[2])[0];
@@ -22,10 +23,12 @@ class FileService
         $caminho = "data/{$empresa}/{$tipo}/{$ano}/{$mes}/{$dia}";
         
         //criando a pasta da empresa
-        mkdir(
-            directory: $caminho, 
-            recursive: true
-        );
+        if (!is_dir($caminho)) {
+            mkdir(
+                directory: $caminho, 
+                recursive: true
+            );   
+        } 
         
         $arquivoFinal = date('Y-m-d_His');
         
