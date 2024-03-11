@@ -13,6 +13,38 @@ $file = FileService::save($nomeDoArquivo);
 echo "- Tipo: {$file->tipo}".PHP_EOL;
 
 if ($file->tipo === 'saida') {
+    $linhas = file($nomeDoArquivo);
+
+    $separador = ',';
+    if (true === str_contains($linhas[0], ';')) {
+        $separador = ';';
+    }
+
+    if (false === file_exists("data/{$file->empresa}/colaboradores.csv")) {
+        echo 'Arquivo de colaboradores não existe.' . PHP_EOL;
+        exit;
+    }
+
+    $colabradores = file("data/{$file->empresa}/colaboradores.csv");
+    $colabradoresFinal = $colabradores;
+
+    unset($linhas[0]); //remove o cabeçalho
+    foreach ($linhas as $linha) {
+        $matriculaExcluir = explode($separador, $linha)[0];
+
+        foreach ($colabradores as $key => $colabrador) {
+            $matriculaColaborador = explode(';', $colabrador)[0];
+
+            if ($matriculaColaborador === $matriculaExcluir) {
+                unset($colabradoresFinal[$key]);
+            }
+        }
+    }
+
+    $arquivoColab = fopen("data/{$file->empresa}/colaboradores.csv", "w");
+    fwrite($arquivoColab, implode($colabradoresFinal));
+    fclose($arquivoColab); 
+
     echo '========================'.PHP_EOL;
     exit;
 }
